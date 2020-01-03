@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="junkdrawer" default="build">
+	<description>junkdrawer</description>
+
+	<property name="zip.name" value="${ant.project.name}.zip" />
+	<property name="build.dir" value="D:\dev\build\${ant.project.name}" />
+	<property name="build.data.dir" value="${build.dir}\data" />
+	
+	<property name="binary.dir" value="D:\dev\bin" />
+	
+	<target name="clean" description="Clean up">
+		<delete dir="${build.dir}" />
+		<delete dir="${build.data.dir}" />
+
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.data.dir}" />
+		<mkdir dir="${build.data.dir}/log" />
+	</target>
+
+	<target name="copy_src" description="copy src files to build dir">
+		<copy todir="${build.data.dir}">
+			<fileset dir="${basedir}">
+				<exclude name="**/*.log" />
+				<exclude name="**/*.tmp" />
+				<exclude name="**/.*" />
+				<exclude name="**/log/**" />
+				<exclude name="**/.settings/*" />
+				<exclude name="**/.externalToolBuilders/*" />
+				<exclude name="etc/junkdrawer.ico" />
+				<exclude name="etc/build.xml" />
+				<exclude name="src/junkdrawer.au3" />
+				<exclude name="src/junkdrawer-task-schedule.xml" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="copy_bin" description="copy bin files">
+		<copy todir="${build.data.dir}/bin">
+			<fileset dir="${binary.dir}">
+				<include name="php/php5/**" />
+				<exclude name="php/php5/ext/**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="zip" description="Create Zip Package">
+		<zip destfile="${build.dir}/${zip.name}" basedir="${build.data.dir}" update="true" level="0" />
+	</target>
+
+	<target name="build" depends="
+		clean,
+		copy_src,
+		copy_bin,
+		zip"
+	/>
+</project>
